@@ -68,7 +68,7 @@ Let's try to translate this into code.
 ```javascript
 function inOrder(currentNode){
   if(currentNode.left){
-    inOrder(currentNode.right)
+    inOrder(currentNode.left)
   }
   console.log(currentNode.data)
   if(currentNode.right){
@@ -82,3 +82,5 @@ Try this out in the console and see that it works.  Trace through the logic in y
 Now you can move on to complete the rest of the tests.  Don't worry the rest of the problems are not as difficult as discovering inOrder.  
 
 Good luck!
+
+<p class='util--hide'>View <a href='https://learn.co/lessons/tree-methods-lab'>Tree Methods Lab</a> on Learn.co and start learning to code for free.</p>
