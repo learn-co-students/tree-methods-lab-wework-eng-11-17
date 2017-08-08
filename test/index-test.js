@@ -1,7 +1,6 @@
 var chai = require('chai');
 var sinon = require('sinon');
 
-
 beforeEach(function() {
   expect.spyOn(console, 'log')
 })
@@ -10,95 +9,77 @@ afterEach(function() {
   expect.restoreSpies()
 })
 
-describe('#printString', function() {
-  it("should print all of the ", function() {
-    printString('pizza')
 
-    expect(console.log).toHaveBeenCalledWith("p")
-    expect(console.log).toHaveBeenCalledWith("i")
-    expect(console.log).toHaveBeenCalledWith("z")
-    expect(console.log).toHaveBeenCalledWith("z")
-    expect(console.log).toHaveBeenCalledWith("a")
-  });
-
-  it("calls the function once for each letter in the string", function() {
-    var printString = sinon.spy(window, "printString");
-    printString("pizza")
-    expect(printString.callCount).toEqual(5)
+describe('#inOrder', function() {
+  it("prints out the data in the node from lowest to highest", function() {
+    let node = {data: 5, left:
+                      {data: 3, left: null, right: null},
+                        right: {data: 7, left: null,
+                        right: {data: 9, left: null, right: null}
+                      }}
+    inOrder(node)
+    expect(console.log).toHaveBeenCalledWith(3)
+    expect(console.log).toHaveBeenCalledWith(5)
+    expect(console.log).toHaveBeenCalledWith(7)
+    expect(console.log).toHaveBeenCalledWith(9)
   })
+})
 
-  it("adds item dynamically", function() {
-    addToCart('pizza');
-    expect(getCart()[0]['item']).toEqual(undefined)
+describe('#findOrAdd', function() {
+  it("should add the presented node if the data does not already exist", function() {
+    let rootNode = {data: 5, left: null, right: null}
+    let firstNewNode = {data: 3, left: null, right: null}
+    let secondNewNode = {data: 7, left: null, right: null}
+    findOrAdd(rootNode, firstNewNode)
+    findOrAdd(rootNode, secondNewNode)
+    expect(rootNode.left).toEqual(firstNewNode)
+    expect(rootNode.right).toEqual(secondNewNode)
+  });
+
+  it("should add new elements on a multilevel tree", function() {
+    let rootNode = {data: 5, left: null, right: null}
+    let firstNewNode = {data: 3, left: null, right: null}
+    let secondNewNode = {data: 7, left: null, right: null}
+    let thirdNewNode = {data: 9, left: null, right: null}
+    findOrAdd(rootNode, firstNewNode)
+    findOrAdd(rootNode, secondNewNode)
+    expect(rootNode.left).toEqual(firstNewNode)
+    expect(rootNode.right).toEqual(secondNewNode)
+    findOrAdd(rootNode, thirdNewNode)
+    expect(rootNode.right.right).toEqual(thirdNewNode)
+  });
+
+  it("should return true if the and not modify the tree if the element exists", function(){
+    let rootNode = {data: 5, left: null, right: null}
+    let firstNewNode = {data: 3, left: null, right: null}
+    let secondNewNode = {data: 7, left: null, right: null}
+    let thirdNewNode = {data: 9, left: null, right: null}
+    findOrAdd(rootNode, firstNewNode)
+    findOrAdd(rootNode, secondNewNode)
+    findOrAdd(rootNode, thirdNewNode)
+    let result = findOrAdd(rootNode, thirdNewNode)
+    expect(result).toEqual(true)
   })
 });
 
-describe('#reverseString', function() {
-  it("should reverse all of the letters of a string", function() {
-    expect(reverseString('pizza')).toEqual("azzip")
-  });
-
-  it("should make the proper recursive calls", function() {
-    var reverseString = sinon.spy(window, "reverseString");
-    reverseString("pizza")
-    expect(reverseString.callCount).toEqual(5)
+describe('#max', function() {
+  it("should return the maximum element in a tree", function(){
+    let node = {data: 5, left:
+                      {data: 3, left: null, right: null},
+                        right: {data: 7, left: null,
+                        right: {data: 9, left: null, right: null}
+                      }}
+  expect(max(node).data).toEqual(9)
   })
-});
+})
 
-
-describe('#isPalindrome', function() {
-  it("should return false when a string is not a palindrome", function() {
-    expect(isPalindrome('pizza')).toEqual(false)
-  });
-
-  it("should return true when a string is a palindrome", function() {
-    expect(isPalindrome("madamimadam")).toEqual(true)
-  });
-
-  it("should make the proper recursive calls", function() {
-    var isPalindrome = sinon.spy(window, "isPalindrome");
-    isPalindrome("madamimadam")
-    expect(isPalindrome.callCount).toEqual(6)
+describe('#min', function() {
+  it("should return the minimum element in a tree", function(){
+    let node = {data: 5, left:
+                      {data: 3, left: null, right: null},
+                        right: {data: 7, left: null,
+                        right: {data: 9, left: null, right: null}
+                      }}
+    expect(min(node).data).toEqual(3)
   })
-});
-
-describe('#addUpTo', function() {
-  it("should add up to a given index in an array", function() {
-    expect(addUpTo([1, 4, 5, 3], 2)).toEqual(10)
-  });
-
-  it("should make the proper recursive calls", function() {
-    var addUpTo = sinon.spy(window, "addUpTo");
-    addUpTo([1, 4, 5, 3], 2)
-    expect(addUpTo.callCount).toEqual(3)
-  });
-});
-
-describe('#maxOf', function() {
-  it("should find the maximum integer in an array", function() {
-    expect(maxOf([1, 4, 5, 3])).toEqual(5)
-  });
-
-  it("should make the proper recursive calls", function() {
-    var maxOf = sinon.spy(window, "maxOf");
-    maxOf([1, 4, 5, 3])
-    expect(maxOf.callCount).toEqual(4)
-  });
-});
-
-
-describe('#includesNumber', function() {
-  it("should return true if the number is included in the array", function() {
-    expect(includesNumber([1, 4, 5, 3], 5)).toEqual(true)
-  });
-
-  it("should return false if the number is not included in the array", function() {
-    expect(includesNumber([1, 4, 2, 3], 5)).toEqual(false)
-  });
-
-  it("should make the proper recursive calls", function() {
-    var includesNumber = sinon.spy(window, "includesNumber");
-    includesNumber([1, 4, 5, 3], 3)
-    expect(includesNumber.callCount).toEqual(4)
-  });
-});
+})
